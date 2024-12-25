@@ -1,0 +1,6 @@
+@DP_BE_LicensePortal_HostAddress = http://localhost:5077
+
+GET {{DP_BE_LicensePortal_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

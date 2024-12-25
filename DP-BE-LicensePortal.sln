@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DP-BE-LicensePortal", "DP-BE-LicensePortal.csproj", "{B143BAB6-319F-4693-8D24-F270B6B8D683}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AA5076A0-8505-4C83-8F30-F531997AB4FD}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B143BAB6-319F-4693-8D24-F270B6B8D683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B143BAB6-319F-4693-8D24-F270B6B8D683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B143BAB6-319F-4693-8D24-F270B6B8D683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B143BAB6-319F-4693-8D24-F270B6B8D683}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

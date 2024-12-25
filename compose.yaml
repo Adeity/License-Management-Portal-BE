@@ -1,0 +1,6 @@
+﻿services:
+  dp-be-licenseportal:
+    image: dp-be-licenseportal
+    build:
+      context: .
+      dockerfile: Dockerfile

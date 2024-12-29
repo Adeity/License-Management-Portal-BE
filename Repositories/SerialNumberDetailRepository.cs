@@ -48,8 +48,8 @@ public class SerialNumberDetailRepository : ISerialNumberDetailRepository
         var entity = await _context.Set<SerialNumberDetail>().FindAsync(id);
         if (entity == null) return null;
 
-        entity.AccountId = dto.AccountId;
-        entity.SerialNumberRequestLogId = dto.SerialNumberRequestLogId;
+        entity.AccountID = dto.AccountId;
+        entity.SerialNumberRequestLogID = dto.SerialNumberRequestLogId;
         entity.IsValid = dto.IsValid;
         entity.Prefix = dto.Prefix;
         entity.ExpirationDate = dto.ExpirationDate;

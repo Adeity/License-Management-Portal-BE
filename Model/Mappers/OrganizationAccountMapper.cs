@@ -11,8 +11,8 @@ public static class OrganizationAccountMapper
         {
             Name = entity.Name,
             ParentOrganizationId = entity.ParentOrganizationId,
-            UserId = entity.UserId,
-            AccountId = entity.AccountId,
+            UserId = entity.UserID,
+            AccountId = entity.AccountID,
             Id = entity.Id,
             OrganizationTypeId = entity.OrganizationTypeId,
             UpdateDate = entity.UpdateDate,
@@ -33,8 +33,8 @@ public static class OrganizationAccountMapper
         {
             Name = dto.Name,
             ParentOrganizationId = dto.ParentOrganizationId,
-            UserId = dto.UserId,
-            AccountId = dto.AccountId,
+            UserID = dto.UserId,
+            AccountID = dto.AccountId,
             OrganizationTypeId = dto.OrganizationTypeId,
             UpdateDate = dto.UpdateDate,
             IsDeleted = dto.IsDeleted

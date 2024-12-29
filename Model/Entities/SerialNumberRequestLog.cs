@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DP_BE_LicensePortal.Model.Entities;
 
-/// <summary>
-/// License generation request log.
-/// </summary>
+[Table("SerialNumberRequestLog", Schema = "Activation")]
 public partial class SerialNumberRequestLog
 {
-    /// <summary>
-    /// Last changed date
-    /// </summary>
-    public DateTime UpdateDate { get; set; }
+    [Key]
+    public int ID { get; set; }
 
-    /// <summary>
-    /// Request date
-    /// </summary>
+    [Column(TypeName = "datetime")]
     public DateTime OrderdDate { get; set; }
 
-    /// <summary>
-    /// How many serial numbers got requested (1)
-    /// </summary>
-    public int RequestedSn { get; set; }
+    public int RequestedSN { get; set; }
 
-    /// <summary>
-    /// Primary Key
-    /// </summary>
-    public int Id { get; set; }
+    [StringLength(256)]
+    public string UserID { get; set; } = null!;
 
+    [Column(TypeName = "datetime")]
+    public DateTime UpdateDate { get; set; }
+
+    [InverseProperty("SerialNumberRequestLog")]
     public virtual ICollection<SerialNumberDetail> SerialNumberDetails { get; set; } = new List<SerialNumberDetail>();
 }

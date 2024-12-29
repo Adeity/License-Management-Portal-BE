@@ -51,8 +51,8 @@ public class OrganizationAccountRepository : IOrganizationAccountRepository
 
         entity.Name = dto.Name;
         entity.ParentOrganizationId = dto.ParentOrganizationId;
-        entity.UserId = dto.UserId;
-        entity.AccountId = dto.AccountId;
+        entity.UserID = dto.UserId;
+        entity.AccountID = dto.AccountId;
         entity.OrganizationTypeId = dto.OrganizationTypeId;
         entity.UpdateDate = dto.UpdateDate;
         entity.IsDeleted = dto.IsDeleted;

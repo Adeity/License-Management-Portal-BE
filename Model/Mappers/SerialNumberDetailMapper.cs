@@ -9,10 +9,10 @@ public static class SerialNumberDetailMapper
     {
         return new SerialNumberDetailOutputDto
         {
-            AccountId = entity.AccountId,
-            SerialNumberRequestLogId = entity.SerialNumberRequestLogId,
+            AccountId = entity.AccountID,
+            SerialNumberRequestLogId = entity.SerialNumberRequestLogID,
             IsValid = entity.IsValid,
-            Id = entity.Id,
+            Id = entity.ID,
             Prefix = entity.Prefix,
             ExpirationDate = entity.ExpirationDate,
             ResellerInvoiceLastRenew = entity.ResellerInvoiceLastRenew,
@@ -32,8 +32,8 @@ public static class SerialNumberDetailMapper
     {
         return new SerialNumberDetail
         {
-            AccountId = dto.AccountId,
-            SerialNumberRequestLogId = dto.SerialNumberRequestLogId,
+            AccountID = dto.AccountId,
+            SerialNumberRequestLogID = dto.SerialNumberRequestLogId,
             IsValid = dto.IsValid,
             Prefix = dto.Prefix,
             ExpirationDate = dto.ExpirationDate,

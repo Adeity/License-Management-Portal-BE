@@ -46,4 +46,3 @@ public class LicenseTableDTO
     /// </summary>
     public int TransfersDone { get; set; }
 }
-

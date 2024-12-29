@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Context\" />
       <Folder Include="Model\Entities\" />
     </ItemGroup>
 

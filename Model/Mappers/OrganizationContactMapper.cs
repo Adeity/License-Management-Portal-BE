@@ -10,7 +10,7 @@ public static class OrganizationContactMapper
         return new OrganizationContactOutputDto
         {
             OrganizationRoleId = entity.OrganizationRoleId,
-            UserId = entity.UserId,
+            UserID = entity.UserID,
             UpdateDate = entity.UpdateDate,
             Id = entity.Id,
             OrganizationAccountId = entity.OrganizationAccountId,
@@ -18,7 +18,6 @@ public static class OrganizationContactMapper
             ContactType = entity.ContactType.ToOutputDto(),
             OrganizationAccount = entity.OrganizationAccount.ToOutputDto(),
             OrganizationRole = entity.OrganizationRole.ToOutputDto(),
-            User = entity.User?.ToOutputDto()
         };
     }
 
@@ -27,7 +26,7 @@ public static class OrganizationContactMapper
         return new OrganizationContact
         {
             OrganizationRoleId = dto.OrganizationRoleId,
-            UserId = dto.UserId,
+            UserID = dto.UserID,
             UpdateDate = dto.UpdateDate,
             OrganizationAccountId = dto.OrganizationAccountId,
             ContactTypeId = dto.ContactTypeId

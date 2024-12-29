@@ -12,4 +12,3 @@ public interface IOrganizationAccountRepository
     Task<OrganizationAccountOutputDto> UpdateAsync(int id, OrganizationAccountInputDto dto);
     Task DeleteAsync(int id);
 }
-

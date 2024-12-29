@@ -1,3 +1,4 @@
+
 using DP_BE_LicensePortal.Context;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Repositories;
@@ -18,29 +19,16 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configure Identity
-builder.Services.AddIdentity<User, IdentityRole<int>>()
-    .AddEntityFrameworkStores<MyDbContext>()
-    .AddDefaultTokenProviders();
-
-// Configure Authentication
-// builder.Services.AddAuthentication()
-//     .AddNegotiate()
-//     .AddIdentityCookies();
-
 // Register repositories
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IOrganizationAccountRepository, OrganizationAccountRepository>();
 builder.Services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
 builder.Services.AddScoped<ISerialNumberDetailRepository, SerialNumberDetailRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// Register services
+// // Register services
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IOrganizationAccountService, OrganizationAccountService>();
 builder.Services.AddScoped<IPackageDetailService, PackageDetailService>();
 builder.Services.AddScoped<ISerialNumberDetailService, SerialNumberDetailService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

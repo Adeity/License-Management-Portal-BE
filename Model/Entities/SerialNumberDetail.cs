@@ -1,76 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DP_BE_LicensePortal.Model.Entities;
 
-/// <summary>
-/// License details.
-/// </summary>
+[Table("SerialNumberDetails", Schema = "Activation")]
 public partial class SerialNumberDetail
 {
-    /// <summary>
-    /// Account
-    /// </summary>
-    public string AccountId { get; set; } = null!;
+    [Key]
+    public int ID { get; set; }
 
-    /// <summary>
-    /// Request log
-    /// </summary>
-    public int SerialNumberRequestLogId { get; set; }
+    public int SerialNumberRequestLogID { get; set; }
 
-    /// <summary>
-    /// Is valid license
-    /// </summary>
-    public bool IsValid { get; set; }
-
-    /// <summary>
-    /// Primary Key
-    /// </summary>
-    public int Id { get; set; }
-
-    /// <summary>
-    /// License prefix &quot;PRO&quot;,&quot;RFM&quot;
-    /// </summary>
-    public string Prefix { get; set; } = null!;
-
-    /// <summary>
-    /// License expiration date
-    /// </summary>
-    public DateTime ExpirationDate { get; set; }
-
-    public string ResellerInvoiceLastRenew { get; set; } = null!;
-
-    /// <summary>
-    /// Is temporary license
-    /// </summary>
-    public bool? IsTemp { get; set; }
-
-    public string ResellerInvoice { get; set; } = null!;
-
-    public string ResellerAccount { get; set; } = null!;
-
-    /// <summary>
-    /// Product number &quot;PRO-RFM-003&quot;
-    /// </summary>
-    public string ProductNumber { get; set; } = null!;
-
-    /// <summary>
-    /// License number
-    /// &quot;RFM-QYF5S0-TVA7K-JG3YA-J32P7-3KNN7-D7KV0&quot;
-    /// </summary>
+    [StringLength(50)]
+    [Unicode(false)]
     public string SerialNumber { get; set; } = null!;
 
-    /// <summary>
-    /// Last changed date
-    /// </summary>
+    [StringLength(50)]
+    [Unicode(false)]
+    public string AccountID { get; set; } = null!;
+
+    [StringLength(20)]
+    [Unicode(false)]
+    public string Prefix { get; set; } = null!;
+
+    [StringLength(50)]
+    public string ProductNumber { get; set; } = null!;
+
+    [Column(TypeName = "datetime")]
+    public DateTime ExpirationDate { get; set; }
+
+    public bool? IsTemp { get; set; }
+
+    public bool IsValid { get; set; }
+
+    [StringLength(256)]
+    public string UserID { get; set; } = null!;
+
+    [Column(TypeName = "datetime")]
     public DateTime UpdateDate { get; set; }
 
-    /// <summary>
-    /// Last time license modification where made.
-    /// </summary>
+    [Column(TypeName = "datetime")]
     public DateTime? LatestModificationDate { get; set; }
 
+    [StringLength(50)]
+    [Unicode(false)]
     public string ResellerCode { get; set; } = null!;
 
+    [StringLength(50)]
+    public string ResellerAccount { get; set; } = null!;
+
+    [StringLength(50)]
+    public string ResellerInvoice { get; set; } = null!;
+
+    [StringLength(50)]
+    public string ResellerInvoiceLastRenew { get; set; } = null!;
+
+    [ForeignKey("SerialNumberRequestLogID")]
+    [InverseProperty("SerialNumberDetails")]
     public virtual SerialNumberRequestLog SerialNumberRequestLog { get; set; } = null!;
+
+    [InverseProperty("SerialNumberDetails")]
+    public virtual ICollection<SubscriptionItem> SubscriptionItems { get; set; } = new List<SubscriptionItem>();
 }

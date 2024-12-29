@@ -11,8 +11,8 @@ public static class SerialNumberRequestLogMapper
         {
             UpdateDate = entity.UpdateDate,
             OrderdDate = entity.OrderdDate,
-            RequestedSn = entity.RequestedSn,
-            Id = entity.Id,
+            RequestedSn = entity.RequestedSN,
+            Id = entity.ID,
             SerialNumberDetails = entity.SerialNumberDetails.Select(snd => snd.ToOutputDto()).ToList()
         };
     }
@@ -23,7 +23,7 @@ public static class SerialNumberRequestLogMapper
         {
             UpdateDate = dto.UpdateDate,
             OrderdDate = dto.OrderdDate,
-            RequestedSn = dto.RequestedSn
+            RequestedSN = dto.RequestedSn
         };
     }
 }

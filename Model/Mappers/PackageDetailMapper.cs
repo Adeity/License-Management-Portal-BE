@@ -9,7 +9,7 @@ public static class PackageDetailMapper
     {
         return new PackageDetailOutputDto
         {
-            Id = entity.Id,
+            Id = entity.ID,
             Flags = entity.Flags,
             ProductNumber = entity.ProductNumber,
             Legacy = entity.Legacy,

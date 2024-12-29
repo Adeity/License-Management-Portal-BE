@@ -3,7 +3,7 @@
 public class OrganizationContactInputDto
 {
     public int OrganizationRoleId { get; set; }
-    public int? UserId { get; set; }
+    public string UserID { get; set; }
     public DateTime UpdateDate { get; set; }
     public int OrganizationAccountId { get; set; }
     public int ContactTypeId { get; set; }

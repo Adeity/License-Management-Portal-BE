@@ -1,4 +1,5 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Context;
+using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Model.Mappers;
 using DP_BE_LicensePortal.Repositories.Interfaces;
@@ -8,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DP_BE_LicensePortal.Repositories;
 public class PackageDetailRepository : IPackageDetailRepository
 {
-    private readonly DbContext _context;
+    private readonly MyDbContext _context;
 
-    public PackageDetailRepository(DbContext context)
+    public PackageDetailRepository(MyDbContext context)
     {
         _context = context;
     }

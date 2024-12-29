@@ -24,13 +24,9 @@ builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddDefaultTokenProviders();
 
 // Configure Authentication
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-    })
-    .AddNegotiate()
-    .AddIdentityCookies();
+// builder.Services.AddAuthentication()
+//     .AddNegotiate()
+//     .AddIdentityCookies();
 
 // Register repositories
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
@@ -66,7 +62,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,4 +1,5 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Context;
+using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Model.Mappers;
 using DP_BE_LicensePortal.Repositories.Interfaces;
@@ -9,9 +10,9 @@ namespace DP_BE_LicensePortal.Repositories;
 
 public class OrganizationAccountRepository : IOrganizationAccountRepository
 {
-    private readonly DbContext _context;
+    private readonly MyDbContext _context;
 
-    public OrganizationAccountRepository(DbContext context)
+    public OrganizationAccountRepository(MyDbContext context)
     {
         _context = context;
     }

@@ -83,8 +83,10 @@ public class UserService : IUserService
 
     public async Task<UserOutputDto?> AuthenticateAsync(string email, string password)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+        // var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userRepository.GetByEmailAsync(email);
+        var a = 1;
+        // if (user == null || !await _userManager.CheckPasswordAsync(user, password))
         {
             return null;
         }

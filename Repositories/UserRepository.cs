@@ -1,4 +1,5 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Context;
+using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Model.Mappers;
 using DP_BE_LicensePortal.Repositories.Interfaces;
@@ -9,9 +10,9 @@ namespace DP_BE_LicensePortal.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly DbContext _context;
+    private readonly MyDbContext _context;
 
-    public UserRepository(DbContext context)
+    public UserRepository(MyDbContext context)
     {
         _context = context;
     }

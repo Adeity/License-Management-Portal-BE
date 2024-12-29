@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DP_BE_LicensePortal.Context;
 
-public partial class MyDbContext : DbContext
+public partial class MyDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public MyDbContext()
     {

@@ -1,79 +1,62 @@
 ﻿using DP_BE_LicensePortal.Context;
-using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.Entities;
-using DP_BE_LicensePortal.Model.Mappers;
 using DP_BE_LicensePortal.Repositories.Interfaces;
 using DP_BE_LicensePortal.Utilities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace DP_BE_LicensePortal.Repositories;
-public class SerialNumberDetailRepository : ISerialNumberDetailRepository
+namespace DP_BE_LicensePortal.Repositories
 {
-    private readonly MyDbContext _context;
-
-    public SerialNumberDetailRepository(MyDbContext context)
+    public class SerialNumberDetailRepository : ISerialNumberDetailRepository
     {
-        _context = context;
-    }
+        private readonly MyDbContext _context;
 
-    public async Task<SerialNumberDetailOutputDto> GetByIdAsync(int id)
-    {
-        var entity = await _context.Set<SerialNumberDetail>().FindAsync(id);
-        return entity?.ToOutputDto();
-    }
-
-    public async Task<Pagination<SerialNumberDetailOutputDto>> GetAllAsync(int pageIndex, int pageSize)
-    {
-        var list = await _context.Set<SerialNumberDetail>()
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        var totalItems = await _context.Set<SerialNumberDetail>().CountAsync();
-        var dtoList = list.Select(snd => snd.ToOutputDto()).ToList();
-
-        return new Pagination<SerialNumberDetailOutputDto>(dtoList, totalItems, pageIndex, pageSize);
-    }
-
-    public async Task<SerialNumberDetailOutputDto> AddAsync(SerialNumberDetailInputDto dto)
-    {
-        var entity = dto.ToEntity();
-        _context.Set<SerialNumberDetail>().Add(entity);
-        await _context.SaveChangesAsync();
-        return entity.ToOutputDto();
-    }
-
-    public async Task<SerialNumberDetailOutputDto> UpdateAsync(int id, SerialNumberDetailInputDto dto)
-    {
-        var entity = await _context.Set<SerialNumberDetail>().FindAsync(id);
-        if (entity == null) return null;
-
-        entity.AccountID = dto.AccountId;
-        entity.SerialNumberRequestLogID = dto.SerialNumberRequestLogId;
-        entity.IsValid = dto.IsValid;
-        entity.Prefix = dto.Prefix;
-        entity.ExpirationDate = dto.ExpirationDate;
-        entity.ResellerInvoiceLastRenew = dto.ResellerInvoiceLastRenew;
-        entity.IsTemp = dto.IsTemp;
-        entity.ResellerInvoice = dto.ResellerInvoice;
-        entity.ResellerAccount = dto.ResellerAccount;
-        entity.ProductNumber = dto.ProductNumber;
-        entity.SerialNumber = dto.SerialNumber;
-        entity.UpdateDate = dto.UpdateDate;
-        entity.LatestModificationDate = dto.LatestModificationDate;
-        entity.ResellerCode = dto.ResellerCode;
-
-        await _context.SaveChangesAsync();
-        return entity.ToOutputDto();
-    }
-
-    public async Task DeleteAsync(int id)
-    {
-        var entity = await _context.Set<SerialNumberDetail>().FindAsync(id);
-        if (entity != null)
+        public SerialNumberDetailRepository(MyDbContext context)
         {
-            _context.Set<SerialNumberDetail>().Remove(entity);
+            _context = context;
+        }
+
+        public async Task<SerialNumberDetail> GetByIdAsync(int id)
+        {
+            return await _context.Set<SerialNumberDetail>().FindAsync(id);
+        }
+
+        public async Task<Pagination<SerialNumberDetail>> GetAllAsync(int pageIndex, int pageSize)
+        {
+            var list = await _context.Set<SerialNumberDetail>()
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var totalItems = await _context.Set<SerialNumberDetail>().CountAsync();
+
+            return new Pagination<SerialNumberDetail>(list, totalItems, pageIndex, pageSize);
+        }
+
+        public async Task<SerialNumberDetail> AddAsync(SerialNumberDetail entity)
+        {
+            _context.Set<SerialNumberDetail>().Add(entity);
             await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<SerialNumberDetail> UpdateAsync(int id, SerialNumberDetail entity)
+        {
+            _context.Set<SerialNumberDetail>().Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Set<SerialNumberDetail>().FindAsync(id);
+            if (entity != null)
+            {
+                _context.Set<SerialNumberDetail>().Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

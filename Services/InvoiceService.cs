@@ -1,41 +1,62 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Model.Entities;
+using DP_BE_LicensePortal.Model.dto.input;
+using DP_BE_LicensePortal.Model.dto.output;
 using DP_BE_LicensePortal.Repositories.Interfaces;
 using DP_BE_LicensePortal.Services.Interfaces;
 using DP_BE_LicensePortal.Utilities;
+using System.Threading.Tasks;
+using System.Linq;
+using DP_BE_LicensePortal.Model.Mappers;
 
-namespace DP_BE_LicensePortal.Services;
-
-public class InvoiceService : IInvoiceService
+namespace DP_BE_LicensePortal.Services
 {
-    private readonly IInvoiceRepository _invoiceRepository;
-
-    public InvoiceService(IInvoiceRepository invoiceRepository)
+    public class InvoiceService : IInvoiceService
     {
-        _invoiceRepository = invoiceRepository;
-    }
+        private readonly IInvoiceRepository _invoiceRepository;
 
-    public async Task<InvoiceOutputDto> GetByIdAsync(int id)
-    {
-        return await _invoiceRepository.GetByIdAsync(id);
-    }
+        public InvoiceService(IInvoiceRepository invoiceRepository)
+        {
+            _invoiceRepository = invoiceRepository;
+        }
 
-    public async Task<Pagination<InvoiceOutputDto>> GetAllAsync(int pageIndex, int pageSize)
-    {
-        return await _invoiceRepository.GetAllAsync(pageIndex, pageSize);
-    }
+        public async Task<InvoiceOutputDto> GetByIdAsync(int id)
+        {
+            var entity = await _invoiceRepository.GetByIdAsync(id);
+            return entity?.ToOutputDto();
+        }
 
-    public async Task<InvoiceOutputDto> AddAsync(InvoiceInputDto dto)
-    {
-        return await _invoiceRepository.AddAsync(dto);
-    }
+        public async Task<Pagination<InvoiceOutputDto>> GetAllAsync(int pageIndex, int pageSize)
+        {
+            var result = await _invoiceRepository.GetAllAsync(pageIndex, pageSize);
+            var dtoList = result.Items.Select(entity => entity.ToOutputDto()).ToList();
 
-    public async Task<InvoiceOutputDto> UpdateAsync(int id, InvoiceInputDto dto)
-    {
-        return await _invoiceRepository.UpdateAsync(id, dto);
-    }
+            return new Pagination<InvoiceOutputDto>(dtoList, result.TotalItems, pageIndex, pageSize);
+        }
 
-    public async Task DeleteAsync(int id)
-    {
-        await _invoiceRepository.DeleteAsync(id);
+        public async Task<InvoiceOutputDto> AddAsync(InvoiceInputDto dto)
+        {
+            var entity = dto.ToEntity();
+            var savedEntity = await _invoiceRepository.AddAsync(entity);
+            return savedEntity.ToOutputDto();
+        }
+
+        public async Task<InvoiceOutputDto> UpdateAsync(int id, InvoiceInputDto dto)
+        {
+            var existingEntity = await _invoiceRepository.GetByIdAsync(id);
+            if (existingEntity == null) return null;
+
+            // Update entity properties from DTO
+            existingEntity.OrganizationAccountId = dto.OrganizationAccountId;
+            existingEntity.InvoiceTypeId = dto.InvoiceTypeId;
+            existingEntity.UpdateDate = dto.UpdateDate;
+
+            var updatedEntity = await _invoiceRepository.UpdateAsync(id, existingEntity);
+            return updatedEntity.ToOutputDto();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _invoiceRepository.DeleteAsync(id);
+        }
     }
 }

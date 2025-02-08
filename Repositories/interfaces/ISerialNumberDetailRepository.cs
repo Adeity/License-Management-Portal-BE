@@ -1,13 +1,15 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Utilities;
+using System.Threading.Tasks;
 
-namespace DP_BE_LicensePortal.Repositories.Interfaces;
-
-public interface ISerialNumberDetailRepository
+namespace DP_BE_LicensePortal.Repositories.Interfaces
 {
-    Task<SerialNumberDetailOutputDto> GetByIdAsync(int id);
-    Task<Pagination<SerialNumberDetailOutputDto>> GetAllAsync(int pageIndex, int pageSize);
-    Task<SerialNumberDetailOutputDto> AddAsync(SerialNumberDetailInputDto dto);
-    Task<SerialNumberDetailOutputDto> UpdateAsync(int id, SerialNumberDetailInputDto dto);
-    Task DeleteAsync(int id);
+    public interface ISerialNumberDetailRepository
+    {
+        Task<SerialNumberDetail?> GetByIdAsync(int id);
+        Task<Pagination<SerialNumberDetail>> GetAllAsync(int pageIndex, int pageSize);
+        Task<SerialNumberDetail> AddAsync(SerialNumberDetail entity);
+        Task<SerialNumberDetail> UpdateAsync(int id, SerialNumberDetail entity);
+        Task DeleteAsync(int id);
+    }
 }

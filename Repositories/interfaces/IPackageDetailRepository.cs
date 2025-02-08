@@ -1,13 +1,15 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Utilities;
+using System.Threading.Tasks;
 
-namespace DP_BE_LicensePortal.Repositories.Interfaces;
-
-public interface IPackageDetailRepository
+namespace DP_BE_LicensePortal.Repositories.Interfaces
 {
-    Task<PackageDetailOutputDto> GetByIdAsync(int id);
-    Task<Pagination<PackageDetailOutputDto>> GetAllAsync(int pageIndex, int pageSize);
-    Task<PackageDetailOutputDto> AddAsync(PackageDetailInputDto dto);
-    Task<PackageDetailOutputDto> UpdateAsync(int id, PackageDetailInputDto dto);
-    Task DeleteAsync(int id);
+    public interface IPackageDetailRepository
+    {
+        Task<PackageDetail> GetByIdAsync(int id);
+        Task<Pagination<PackageDetail>> GetAllAsync(int pageIndex, int pageSize);
+        Task<PackageDetail> AddAsync(PackageDetail entity);
+        Task<PackageDetail> UpdateAsync(int id, PackageDetail entity);
+        Task DeleteAsync(int id);
+    }
 }

@@ -750,3 +750,57 @@ INSERT INTO Reseller.SubscriptionItem (Id, InvoiceId, SerialNumberDetailsId, EMa
 INSERT INTO Reseller.SubscriptionItem (Id, InvoiceId, SerialNumberDetailsId, EMailSentCount, UserID, UpdateDate) VALUES (748, 105, 99634, 0, N'NAPA\E0092925', N'2023-09-06 13:51:02.960');
 INSERT INTO Reseller.SubscriptionItem (Id, InvoiceId, SerialNumberDetailsId, EMailSentCount, UserID, UpdateDate) VALUES (749, 105, 99635, 0, N'NAPA\E0092925', N'2023-09-06 13:51:03.083');
 SET IDENTITY_INSERT Reseller.SubscriptionItem OFF;
+
+create table Activation.ActivationDetails
+(
+    ID                    int identity (100001, 1)
+        constraint PK_XHEO_Activation_ActivationDetails
+            primary key,
+    SerialNumberDetailsID int                                        not null
+        constraint FK_ActivationDetails_SerialNumberDetailsID
+            references Activation.SerialNumberDetails,
+    ReferenceId           int                                        not null,
+    CustomerName          varchar(50),
+    Organization          varchar(50),
+    SystemName            varchar(50),
+    ProfileHash           nvarchar(256)                              not null,
+    DateActivated         datetime                                   not null,
+    AllowNewMachine       bit                                        not null,
+    UserID                nvarchar(256)
+        constraint DF_ActivationDetails_UserID default suser_sname() not null,
+    UpdateDate            datetime
+        constraint DF_ActivationDetails_UpdateDate default getdate() not null
+)
+go
+
+create index IX_ActivationDetails_ProfileHash
+    on Activation.ActivationDetails (ProfileHash)
+go
+
+create index IX_ActivationDetails_SerialNumberDetailsID
+    on Activation.ActivationDetails (SerialNumberDetailsID)
+go
+
+INSERT INTO Activation.ActivationDetails (
+    SerialNumberDetailsID,
+    ReferenceId,
+    CustomerName,
+    Organization,
+    SystemName,
+    ProfileHash,
+    DateActivated,
+    AllowNewMachine,
+    UserID,
+    UpdateDate
+)
+VALUES
+    (99625, 1001, 'John Doe', 'Acme Corp', 'Server-001', HASHBYTES('SHA2_256', 'profile1'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
+    (99626, 1002, 'Jane Smith', 'Beta Ltd', 'Workstation-01', HASHBYTES('SHA2_256', 'profile2'), GETDATE(), 0, SUSER_SNAME(), GETDATE()),
+    (99627, 1003, 'Alice Brown', 'Gamma Inc', 'Laptop-123', HASHBYTES('SHA2_256', 'profile3'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
+    (99628, 1004, 'Robert Johnson', 'Delta LLC', 'Server-002', HASHBYTES('SHA2_256', 'profile4'), GETDATE(), 0, SUSER_SNAME(), GETDATE()),
+    (99629, 1005, 'Emma Wilson', 'Epsilon Ltd', 'Desktop-PC', HASHBYTES('SHA2_256', 'profile5'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
+    (99630, 1006, 'Liam Martinez', 'Zeta Corp', 'VM-Host-1', HASHBYTES('SHA2_256', 'profile6'), GETDATE(), 0, SUSER_SNAME(), GETDATE()),
+    (99631, 1007, 'Sophia Davis', 'Eta Solutions', 'NAS-Storage', HASHBYTES('SHA2_256', 'profile7'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
+    (99632, 1008, 'Noah Clark', 'Theta Systems', 'Cloud-Server', HASHBYTES('SHA2_256', 'profile8'), GETDATE(), 0, SUSER_SNAME(), GETDATE()),
+    (99633, 1009, 'Olivia Rodriguez', 'Iota Ltd', 'Workstation-02', HASHBYTES('SHA2_256', 'profile9'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
+    (99634, 1010, 'William Gonzalez', 'Kappa Group', 'Server-003', HASHBYTES('SHA2_256', 'profile10'), GETDATE(), 0, SUSER_SNAME(), GETDATE());

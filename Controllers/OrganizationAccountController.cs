@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DP_BE_LicensePortal.Controllers;
 
 [ApiController]
-[Route("api/organizations")]
+[Route("oldapi/organizations")]
 public class OrganizationAccountController : ControllerBase
 {
     private readonly IOrganizationAccountService _organizationAccountService;

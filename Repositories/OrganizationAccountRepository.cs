@@ -1,11 +1,11 @@
-﻿using DP_BE_LicensePortal.Context;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DP_BE_LicensePortal.Context;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Repositories.Interfaces;
 using DP_BE_LicensePortal.Utilities;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DP_BE_LicensePortal.Repositories
 {
@@ -18,21 +18,39 @@ namespace DP_BE_LicensePortal.Repositories
             _context = context;
         }
 
-        public async Task<OrganizationAccount> GetByIdAsync(int id)
+        public async Task<OrganizationAccount?> GetByIdAsync(int id)
         {
             return await _context.Set<OrganizationAccount>().FindAsync(id);
         }
 
         public async Task<Pagination<OrganizationAccount>> GetAllAsync(int pageIndex, int pageSize)
         {
-            var list = await _context.Set<OrganizationAccount>()
+            var query = _context.Set<OrganizationAccount>();
+
+            var totalItems = await query.CountAsync();
+            var items = await query
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            var totalItems = await _context.Set<OrganizationAccount>().CountAsync();
+            return new Pagination<OrganizationAccount>(items, totalItems, pageIndex, pageSize);
+        }
 
-            return new Pagination<OrganizationAccount>(list, totalItems, pageIndex, pageSize);
+        public Task<bool> ExistsByIdAsync(int id)
+        {
+            return _context.Set<OrganizationAccount>().AnyAsync(e => e.Id == id);
+        }
+
+        // This retrieves all resellers;
+        public async Task<List<OrganizationAccount>> GetAllWithoutParentIdAsync()
+        {
+            var query = _context.Set<OrganizationAccount>();
+
+            var items = await query
+                .Where(e => e.ParentOrganizationId == null)
+                .ToListAsync();
+
+            return items;
         }
 
         public async Task<OrganizationAccount> AddAsync(OrganizationAccount entity)
@@ -44,10 +62,19 @@ namespace DP_BE_LicensePortal.Repositories
 
         public async Task<OrganizationAccount> UpdateAsync(int id, OrganizationAccount entity)
         {
-            _context.Set<OrganizationAccount>().Update(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            var existingEntity = await _context.Set<OrganizationAccount>().FindAsync(id);
+            if (existingEntity == null) return null;
 
+            existingEntity.Name = entity.Name;
+            existingEntity.ParentOrganizationId = entity.ParentOrganizationId;
+            existingEntity.UserID = entity.UserID;
+            existingEntity.AccountID = entity.AccountID;
+            existingEntity.OrganizationTypeId = entity.OrganizationTypeId;
+            existingEntity.UpdateDate = entity.UpdateDate;
+            existingEntity.IsDeleted = entity.IsDeleted;
+
+            await _context.SaveChangesAsync();
+            return existingEntity;
         }
 
         public async Task DeleteAsync(int id)
@@ -58,6 +85,13 @@ namespace DP_BE_LicensePortal.Repositories
                 _context.Set<OrganizationAccount>().Remove(entity);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<OrganizationAccount>> GetAllByResellerIdAsync(int resellerId)
+        {
+            return await _context.Set<OrganizationAccount>()
+                .Where(o => o.ParentOrganizationId == resellerId)
+                .ToListAsync();
         }
     }
 }

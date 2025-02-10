@@ -6,6 +6,7 @@ using DP_BE_LicensePortal.Services.Interfaces;
 using DP_BE_LicensePortal.Utilities;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 using DP_BE_LicensePortal.Model.Mappers;
 
 namespace DP_BE_LicensePortal.Services
@@ -19,10 +20,18 @@ namespace DP_BE_LicensePortal.Services
             _organizationAccountRepository = organizationAccountRepository;
         }
 
-        public async Task<OrganizationAccountOutputDto> GetByIdAsync(int id)
+        public async Task<OrganizationAccountOutputDto?> GetByIdAsync(int id)
         {
             var entity = await _organizationAccountRepository.GetByIdAsync(id);
             return entity?.ToOutputDto();
+        }
+
+        public async Task<List<SerialNumberDetailOutputDto>> GetSerialNumbersByOrganizationIdAsync(int id)
+        {
+            // var exists = await _organizationAccountRepository.ExistsByIdAsync(id);
+            // if (!exists) return new List<SerialNumberDetailOutputDto>();
+
+            return null;
         }
 
         public async Task<Pagination<OrganizationAccountOutputDto>> GetAllAsync(int pageIndex, int pageSize)
@@ -61,6 +70,12 @@ namespace DP_BE_LicensePortal.Services
         public async Task DeleteAsync(int id)
         {
             await _organizationAccountRepository.DeleteAsync(id);
+        }
+
+        public async Task<List<OrganizationAccountOutputDto>> GetAllByResellerIdAsync(int resellerId)
+        {
+            var organizations = await _organizationAccountRepository.GetAllByResellerIdAsync(resellerId);
+            return organizations.Select(o => o.ToOutputDto()).ToList();
         }
     }
 }

@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using DP_BE_LicensePortal.Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DP_BE_LicensePortal.Context;
 
 public partial class MyDbContext : DbContext
 {
-    public MyDbContext()
-    {
-    }
-
-    public MyDbContext(DbContextOptions<MyDbContext> options)
+    private readonly IConfiguration _configuration;
+    
+    public MyDbContext(DbContextOptions<MyDbContext> options, IConfiguration configuration)
         : base(options)
     {
+        _configuration = configuration;
     }
 
     public virtual DbSet<AddressType> AddressTypes { get; set; }
@@ -47,8 +47,10 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<SubscriptionItem> SubscriptionItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost,1433;Database=reseller;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;");
+    {
+        var connectionString = _configuration.GetConnectionString("MyDatabase");
+        optionsBuilder.UseSqlServer(connectionString);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -106,6 +108,11 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrganizationAccount_OrganizationType");
 
+            entity.HasOne(d => d.OrganizationAddress).WithOne(p => p.OrganizationAccount)
+                .HasForeignKey<OrganizationAddress>(d => d.OrganizationAccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OrganizationAccount_OrganizationAddress");
+            
             entity.HasOne(d => d.ParentOrganization).WithMany(p => p.InverseParentOrganization).HasConstraintName("FK_OrganizationAccount_OrganizationAccount");
         });
 
@@ -122,9 +129,9 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrganizationAddress_Country");
 
-            entity.HasOne(d => d.OrganizationAccount).WithMany(p => p.OrganizationAddresses)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_OrganizationAddress_OrganizationAccount");
+            // entity.HasOne(d => d.OrganizationAccount).WithMany(p => p.OrganizationAddress)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("FK_OrganizationAddress_OrganizationAccount");
         });
 
         modelBuilder.Entity<OrganizationContact>(entity =>

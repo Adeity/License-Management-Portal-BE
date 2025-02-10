@@ -19,10 +19,10 @@ public static class OrganizationAccountMapper
             IsDeleted = entity.IsDeleted,
             InverseParentOrganization = entity.InverseParentOrganization.Select(ipo => ipo.ToOutputDto()).ToList(),
             Invoices = entity.Invoices.Select(i => i.ToOutputDto()).ToList(),
-            OrganizationAddresses = entity.OrganizationAddresses.Select(oa => oa.ToOutputDto()).ToList(),
+            OrganizationAddress = entity.OrganizationAddress?.ToOutputDto(),
             OrganizationContacts = entity.OrganizationContacts.Select(oc => oc.ToOutputDto()).ToList(),
             OrganizationPackageDetails = entity.OrganizationPackageDetails.Select(opd => opd.ToOutputDto()).ToList(),
-            OrganizationType = entity.OrganizationType.ToOutputDto(),
+            OrganizationType = entity.OrganizationType?.ToOutputDto(),
             ParentOrganization = entity.ParentOrganization?.ToOutputDto()
         };
     }

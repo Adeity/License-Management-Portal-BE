@@ -54,6 +54,6 @@ public partial class OrganizationAddress
     public virtual Country Country { get; set; } = null!;
 
     [ForeignKey("OrganizationAccountId")]
-    [InverseProperty("OrganizationAddresses")]
+    [InverseProperty("OrganizationAddress")]
     public virtual OrganizationAccount OrganizationAccount { get; set; } = null!;
 }

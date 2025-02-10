@@ -41,7 +41,7 @@ public partial class OrganizationAccount
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     [InverseProperty("OrganizationAccount")]
-    public virtual ICollection<OrganizationAddress> OrganizationAddresses { get; set; } = new List<OrganizationAddress>();
+    public virtual OrganizationAddress? OrganizationAddress { get; set; } = null!;
 
     [InverseProperty("OrganizationAccount")]
     public virtual ICollection<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();

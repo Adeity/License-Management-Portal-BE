@@ -29,6 +29,7 @@ builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IOrganizationAccountService, OrganizationAccountService>();
 builder.Services.AddScoped<IPackageDetailService, PackageDetailService>();
 builder.Services.AddScoped<ISerialNumberDetailService, SerialNumberDetailService>();
+builder.Services.AddScoped<IResellerService, ResellerService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

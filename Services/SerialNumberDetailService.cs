@@ -15,11 +15,13 @@ namespace DP_BE_LicensePortal.Services
     {
         private readonly ISerialNumberDetailRepository _serialNumberDetailRepository;
         private readonly IOrganizationAccountRepository _organizationAccountRepository;
+        private readonly IPackageDetailRepository _packageDetailRepository;
 
-        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository, IOrganizationAccountRepository organizationAccountRepository)
+        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository, IOrganizationAccountRepository organizationAccountRepository, IPackageDetailRepository packageDetailRepository)
         {
             _serialNumberDetailRepository = serialNumberDetailRepository;
             _organizationAccountRepository = organizationAccountRepository;
+            _packageDetailRepository = packageDetailRepository;
         }
 
         public async Task<SerialNumberDetailOutputDto> GetByIdAsync(int id)
@@ -57,7 +59,16 @@ namespace DP_BE_LicensePortal.Services
             var licensesEntities =   await _serialNumberDetailRepository.GetByIdsAndOrganizationId(organizationId, sNDetailsIdByOrgId);
             return licensesEntities.Select(licenseEntity => licenseEntity.ToLicenseTableDto(organizationName)).ToList();
         }
-        
+
+        public async Task GenerateLicense(GenerateLicenseInputDto dto)
+        {
+            var packageDetail = await _packageDetailRepository.GetByIdAsync(dto.PackageDetailsId);
+            var organizationAccount = await _organizationAccountRepository.GetByIdAsync(dto.OrganizationAccountId);
+            var quantityOfLicensesToGenerate = dto.QuantityOfLicenses;
+            
+            
+        }
+
         public async Task<SerialNumberDetailOutputDto> UpdateAsync(int id, SerialNumberDetailInputDto dto)
         {
             var existingEntity = await _serialNumberDetailRepository.GetByIdAsync(id);

@@ -26,12 +26,13 @@ namespace DP_BE_LicensePortal.Controllers
             return Ok(licenses);
         }
 
-        // [HttpPost("organizations/{organizationId}")]
-        // public async Task<IActionResult> AssignLicense(int organizationId, [FromBody] LicenseInputDto dto)
-        // {
-        //     var createdLicense = await _licenseService.AssignLicenseAsync(organizationId, dto);
-        //     return CreatedAtAction(nameof(GetLicensesByOrganization), new { organizationId }, createdLicense);
-        // }
+        [HttpPost]
+        public async Task<IActionResult> GenerateLicense([FromBody] GenerateLicenseInputDto dto)
+        {
+            await _serialNumberDetailService.GenerateLicense(dto);
+            return Created();
+            // return CreatedAtAction(nameof(GetLicensesByOrganization), createdLicense);
+        }
         //
         // [HttpPut("{licenseId}/transfer")]
         // public async Task<IActionResult> TransferLicense(int licenseId, [FromBody] TransferLicenseDto dto)

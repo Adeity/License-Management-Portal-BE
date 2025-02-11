@@ -45,6 +45,8 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<SerialNumberRequestLog> SerialNumberRequestLogs { get; set; }
 
     public virtual DbSet<SubscriptionItem> SubscriptionItems { get; set; }
+    public virtual DbSet<ActivationDetail> ActivationDetails { get; set; }
+    public virtual DbSet<ActivationStatusLog> ActivationStatusLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -226,6 +228,32 @@ public partial class MyDbContext : DbContext
 
             entity.HasOne(d => d.SerialNumberDetails).WithMany(p => p.SubscriptionItems).HasConstraintName("FK_SubscriptionItem_SerialNumberDetails");
         });
+
+        modelBuilder.Entity<ActivationDetail>(entity =>
+        {
+            entity.Property(e => e.CustomerName).HasDefaultValue("");
+            entity.Property(e => e.Organization).HasDefaultValue("");
+            entity.Property(e => e.SystemName).HasDefaultValue("");
+            entity.Property(e => e.UpdateDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UserID).HasDefaultValueSql("(suser_sname())");
+
+            entity.HasOne(d => d.SerialNumberDetails).WithMany(p => p.ActivationDetails)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ActivationDetails_SerialNumberDetails");
+        });
+
+        modelBuilder.Entity<ActivationStatusLog>(entity =>
+        {
+            entity.Property(e => e.Reason).HasDefaultValue("");
+            entity.Property(e => e.Status).HasDefaultValue("");
+            entity.Property(e => e.UpdateDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UserID).HasDefaultValueSql("(suser_sname())");
+
+            entity.HasOne(d => d.SerialNumberDetail).WithMany(p => p.ActivationStatusLogs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ActivationStatusLogs_SerialNumberDetails");
+        });
+            
 
         OnModelCreatingPartial(modelBuilder);
     }

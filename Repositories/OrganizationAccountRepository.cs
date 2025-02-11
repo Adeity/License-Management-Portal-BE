@@ -41,6 +41,14 @@ namespace DP_BE_LicensePortal.Repositories
             return _context.Set<OrganizationAccount>().AnyAsync(e => e.Id == id);
         }
 
+        public Task<string?> GetNameByIdAsync(int id)
+        {
+            return _context.Set<OrganizationAccount>()
+                .Where(e => e.Id == id)
+                .Select(e => e.Name)
+                .FirstOrDefaultAsync();
+        }
+
         // This retrieves all resellers;
         public async Task<List<OrganizationAccount>> GetAllWithoutParentIdAsync()
         {

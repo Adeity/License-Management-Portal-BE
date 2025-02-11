@@ -6,6 +6,7 @@ using DP_BE_LicensePortal.Services.Interfaces;
 using DP_BE_LicensePortal.Utilities;
 using System.Threading.Tasks;
 using System.Linq;
+using DP_BE_LicensePortal.Model.dto;
 using DP_BE_LicensePortal.Model.Mappers;
 
 namespace DP_BE_LicensePortal.Services
@@ -13,10 +14,12 @@ namespace DP_BE_LicensePortal.Services
     public class SerialNumberDetailService : ISerialNumberDetailService
     {
         private readonly ISerialNumberDetailRepository _serialNumberDetailRepository;
+        private readonly IOrganizationAccountRepository _organizationAccountRepository;
 
-        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository)
+        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository, IOrganizationAccountRepository organizationAccountRepository)
         {
             _serialNumberDetailRepository = serialNumberDetailRepository;
+            _organizationAccountRepository = organizationAccountRepository;
         }
 
         public async Task<SerialNumberDetailOutputDto> GetByIdAsync(int id)
@@ -40,7 +43,21 @@ namespace DP_BE_LicensePortal.Services
             var savedEntity = await _serialNumberDetailRepository.AddAsync(entity);
             return savedEntity.ToOutputDto();
         }
-
+        
+        /// <summary>
+        /// Service that Gets the Organization Details Information
+        /// </summary>
+        /// <param name="organizationId">Organizations Id to fetch from DataBase</param>
+        /// <returns></returns>
+        public async Task<List<LicenseTableDTO>> GetOrganizationsLicenses(int organizationId)
+        {
+            var sNDetailsIdByOrgId =
+                await _serialNumberDetailRepository.GetIdsByOrganizationIdAsync(organizationId);
+            var organizationName = await _organizationAccountRepository.GetNameByIdAsync(organizationId);
+            var licensesEntities =   await _serialNumberDetailRepository.GetByIdsAndOrganizationId(organizationId, sNDetailsIdByOrgId);
+            return licensesEntities.Select(licenseEntity => licenseEntity.ToLicenseTableDto(organizationName)).ToList();
+        }
+        
         public async Task<SerialNumberDetailOutputDto> UpdateAsync(int id, SerialNumberDetailInputDto dto)
         {
             var existingEntity = await _serialNumberDetailRepository.GetByIdAsync(id);
@@ -48,7 +65,7 @@ namespace DP_BE_LicensePortal.Services
 
             // Update entity properties from DTO
             existingEntity.AccountID = dto.AccountId;
-            existingEntity.SerialNumberRequestLogID = dto.SerialNumberRequestLogId;
+            existingEntity.SerialNumberRequestLogId = dto.SerialNumberRequestLogId;
             existingEntity.IsValid = dto.IsValid;
             existingEntity.Prefix = dto.Prefix;
             existingEntity.ExpirationDate = dto.ExpirationDate;

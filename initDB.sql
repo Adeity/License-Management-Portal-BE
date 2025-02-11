@@ -804,3 +804,84 @@ VALUES
     (99632, 1008, 'Noah Clark', 'Theta Systems', 'Cloud-Server', HASHBYTES('SHA2_256', 'profile8'), GETDATE(), 0, SUSER_SNAME(), GETDATE()),
     (99633, 1009, 'Olivia Rodriguez', 'Iota Ltd', 'Workstation-02', HASHBYTES('SHA2_256', 'profile9'), GETDATE(), 1, SUSER_SNAME(), GETDATE()),
     (99634, 1010, 'William Gonzalez', 'Kappa Group', 'Server-003', HASHBYTES('SHA2_256', 'profile10'), GETDATE(), 0, SUSER_SNAME(), GETDATE());
+
+create table Activation.ActivationStatusLogs
+(
+    ID                   int identity
+        constraint PK_ActivationStatusLogs
+            primary key,
+    SerialNumberDetailID int           not null
+        constraint FK_ActivationStatusLog_SerialNumberDetailID
+            references Activation.SerialNumberDetails,
+    Status               nvarchar(max) not null,
+    Reason               nvarchar(max) not null,
+    UserID               nvarchar(max) not null,
+    UpdateDate           datetime      not null
+)
+go
+
+create index IX_ActivationStatusLogs_SerialNumberDetailID
+    on Activation.ActivationStatusLogs (SerialNumberDetailID)
+go
+
+-- SerialNumberDetailID: 99625 - Ends in Enabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99625, 'Disabled', 'Initial state', SUSER_SNAME(), DATEADD(DAY, -30, GETDATE())),
+    (99625, 'Enabled', 'User activated', SUSER_SNAME(), DATEADD(DAY, -20, GETDATE()));
+
+-- SerialNumberDetailID: 99626 - Ends in Disabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99626, 'Disabled', 'Initial state', SUSER_SNAME(), DATEADD(DAY, -40, GETDATE())),
+    (99626, 'Enabled', 'Activated by admin', SUSER_SNAME(), DATEADD(DAY, -25, GETDATE())),
+    (99626, 'Disabled', 'User requested deactivation', SUSER_SNAME(), DATEADD(DAY, -10, GETDATE()));
+
+-- SerialNumberDetailID: 99627 - Ends in Terminated
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99627, 'Disabled', 'Awaiting activation', SUSER_SNAME(), DATEADD(DAY, -35, GETDATE())),
+    (99627, 'Enabled', 'User activated', SUSER_SNAME(), DATEADD(DAY, -28, GETDATE())),
+    (99627, 'Terminated', 'Security policy violation', SUSER_SNAME(), DATEADD(DAY, -5, GETDATE()));
+
+-- SerialNumberDetailID: 99628 - Ends in Enabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99628, 'Disabled', 'New license issued', SUSER_SNAME(), DATEADD(DAY, -50, GETDATE())),
+    (99628, 'Enabled', 'User confirmed activation', SUSER_SNAME(), DATEADD(DAY, -30, GETDATE()));
+
+-- SerialNumberDetailID: 99629 - Ends in Terminated
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99629, 'Disabled', 'Pending activation', SUSER_SNAME(), DATEADD(DAY, -60, GETDATE())),
+    (99629, 'Enabled', 'Manually activated', SUSER_SNAME(), DATEADD(DAY, -45, GETDATE())),
+    (99629, 'Terminated', 'License revoked', SUSER_SNAME(), DATEADD(DAY, -15, GETDATE()));
+
+-- SerialNumberDetailID: 99630 - Ends in Disabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99630, 'Disabled', 'Deactivation due to inactivity', SUSER_SNAME(), DATEADD(DAY, -20, GETDATE()));
+
+-- SerialNumberDetailID: 99631 - Ends in Enabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99631, 'Disabled', 'Awaiting verification', SUSER_SNAME(), DATEADD(DAY, -45, GETDATE())),
+    (99631, 'Enabled', 'User completed verification', SUSER_SNAME(), DATEADD(DAY, -30, GETDATE()));
+
+-- SerialNumberDetailID: 99632 - Ends in Terminated
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99632, 'Disabled', 'Initial state', SUSER_SNAME(), DATEADD(DAY, -55, GETDATE())),
+    (99632, 'Enabled', 'Activated after review', SUSER_SNAME(), DATEADD(DAY, -40, GETDATE())),
+    (99632, 'Terminated', 'System flagged for security breach', SUSER_SNAME(), DATEADD(DAY, -10, GETDATE()));
+
+-- SerialNumberDetailID: 99633 - Ends in Disabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99633, 'Disabled', 'User requested hold', SUSER_SNAME(), DATEADD(DAY, -25, GETDATE()));
+
+-- SerialNumberDetailID: 99634 - Ends in Enabled
+INSERT INTO Activation.ActivationStatusLogs (SerialNumberDetailID, Status, Reason, UserID, UpdateDate)
+VALUES
+    (99634, 'Disabled', 'License renewal required', SUSER_SNAME(), DATEADD(DAY, -60, GETDATE())),
+    (99634, 'Enabled', 'License renewed successfully', SUSER_SNAME(), DATEADD(DAY, -45, GETDATE()));

@@ -10,6 +10,7 @@ namespace DP_BE_LicensePortal.Repositories.Interfaces
         Task<OrganizationAccount?> GetByIdAsync(int id);
         Task<Pagination<OrganizationAccount>> GetAllAsync(int pageIndex, int pageSize);
         Task<bool> ExistsByIdAsync(int id);
+        Task<string?> GetNameByIdAsync(int id);
         Task<List<OrganizationAccount>> GetAllWithoutParentIdAsync(); // Retrieves resellers
         Task<OrganizationAccount> AddAsync(OrganizationAccount entity);
         Task<OrganizationAccount> UpdateAsync(int id, OrganizationAccount entity);

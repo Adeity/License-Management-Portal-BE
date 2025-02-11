@@ -8,6 +8,8 @@ namespace DP_BE_LicensePortal.Repositories.Interfaces
     {
         Task<SerialNumberDetail?> GetByIdAsync(int id);
         Task<Pagination<SerialNumberDetail>> GetAllAsync(int pageIndex, int pageSize);
+        Task<List<int>> GetIdsByOrganizationIdAsync(int organizationId);
+        Task<List<SerialNumberDetail>> GetByIdsAndOrganizationId(int organizationId, List<int> ids);
         Task<SerialNumberDetail> AddAsync(SerialNumberDetail entity);
         Task<SerialNumberDetail> UpdateAsync(int id, SerialNumberDetail entity);
         Task DeleteAsync(int id);

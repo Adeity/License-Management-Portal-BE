@@ -12,7 +12,7 @@ public partial class SerialNumberDetail
     [Key]
     public int ID { get; set; }
 
-    public int SerialNumberRequestLogID { get; set; }
+    public int SerialNumberRequestLogId { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]
@@ -64,4 +64,6 @@ public partial class SerialNumberDetail
 
     [InverseProperty("SerialNumberDetails")]
     public virtual ICollection<SubscriptionItem> SubscriptionItems { get; set; } = new List<SubscriptionItem>();
+    public virtual ICollection<ActivationDetail> ActivationDetails { get; set; } = new List<ActivationDetail>();
+    public virtual ICollection<ActivationStatusLog> ActivationStatusLogs { get; set; } = new List<ActivationStatusLog>();
 }

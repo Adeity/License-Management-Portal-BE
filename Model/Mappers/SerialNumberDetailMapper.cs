@@ -1,16 +1,67 @@
-﻿using DP_BE_LicensePortal.Model.dto.input;
+﻿using DP_BE_LicensePortal.Model.dto;
+using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.Entities;
 
 namespace DP_BE_LicensePortal.Model.Mappers;
 
 public static class SerialNumberDetailMapper
 {
+    /// <summary>
+    /// Method to check Status of the Serial Number Detail
+    /// </summary>
+    /// <param name="snDetail">Entity of Serial Number Detail</param>
+    /// <returns></returns>
+    public static string GetStatusOfSerialNumber(SerialNumberDetail snDetail)
+    {
+        var activationDetails = snDetail.ActivationDetails.OrderByDescending(adl => adl.DateActivated).Reverse().LastOrDefault();
+        bool allowNewMachine = activationDetails == null ? true : activationDetails.AllowNewMachine;
+        bool isValid = snDetail.IsValid;
+        var activationLog = snDetail.ActivationStatusLogs.OrderByDescending(asl => asl.UpdateDate).Reverse().LastOrDefault();
+        string status = "";
+        if (allowNewMachine && isValid)
+        {
+            status = "Pending Activation";
+        }
+        else if (!allowNewMachine && isValid)
+        {
+            status = "Activated";
+        }
+        else if (activationLog != null && (!allowNewMachine && !isValid && activationLog.Status !="Terminate" || allowNewMachine && !isValid))
+        {
+            status = "Disabled";
+        }
+        else if (activationLog != null && (!allowNewMachine && !isValid && activationLog.Status == "Terminate"))
+        {
+            status = "Terminated";
+        }
+
+        if (snDetail.ExpirationDate < DateTime.Now)
+        {
+            status = "Expired"; //Expired
+        };
+        return status;
+    }
+
+    
+    public static LicenseTableDTO ToLicenseTableDto(this SerialNumberDetail entity, string? organizationName)
+    {
+        return new LicenseTableDTO
+        {
+            id = entity.ID.ToString(),
+            Expires = entity.ExpirationDate,
+            Product_Number = entity.ProductNumber,
+            Serial_Number = entity.SerialNumber,
+            Organization = organizationName,
+            Status = GetStatusOfSerialNumber(entity),
+        };
+    }
+    
     public static SerialNumberDetailOutputDto ToOutputDto(this SerialNumberDetail entity)
     {
         return new SerialNumberDetailOutputDto
         {
             AccountId = entity.AccountID,
-            SerialNumberRequestLogId = entity.SerialNumberRequestLogID,
+            SerialNumberRequestLogId = entity.SerialNumberRequestLogId,
             IsValid = entity.IsValid,
             Id = entity.ID,
             Prefix = entity.Prefix,
@@ -33,7 +84,7 @@ public static class SerialNumberDetailMapper
         return new SerialNumberDetail
         {
             AccountID = dto.AccountId,
-            SerialNumberRequestLogID = dto.SerialNumberRequestLogId,
+            SerialNumberRequestLogId = dto.SerialNumberRequestLogId,
             IsValid = dto.IsValid,
             Prefix = dto.Prefix,
             ExpirationDate = dto.ExpirationDate,

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DP_BE_LicensePortal.Model.dto;
 using DP_BE_LicensePortal.Services.Interfaces;
 using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.dto.output;
@@ -27,12 +28,12 @@ namespace DP_BE_LicensePortal.Controllers
             return Ok(organization);
         }
         
-        // [HttpGet("{organizationId}/licenses")]
-        // public async Task<ActionResult<OrganizationAccountOutputDto>> GetOrganizationLicenses(int organizationId)
-        // {
-        //     var licenses = await _organizationService.GetLicensesByOrganizationId(organizationId);
-        //     return Ok(licenses);
-        // }
+        [HttpGet("{organizationId}/licenses")]
+        public async Task<ActionResult<LicenseTableDTO>> GetOrganizationLicenses(int organizationId)
+        {
+            var licenses = await _organizationService.GetLicensesByOrganizationIdAsync(organizationId);
+            return Ok(licenses);
+        }
 
         [HttpPut("{organizationId}")]
         public async Task<IActionResult> UpdateOrganization(int organizationId, [FromBody] OrganizationAccountInputDto dto)

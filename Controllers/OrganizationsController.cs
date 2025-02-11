@@ -13,10 +13,12 @@ namespace DP_BE_LicensePortal.Controllers
     public class OrganizationsController : ControllerBase
     {
         private readonly IOrganizationAccountService _organizationService;
+        private readonly ISerialNumberDetailService _serialNumberDetailService;
 
-        public OrganizationsController(IOrganizationAccountService organizationService)
+        public OrganizationsController(IOrganizationAccountService organizationService, ISerialNumberDetailService serialNumberDetailService)
         {
             _organizationService = organizationService;
+            _serialNumberDetailService = serialNumberDetailService;
         }
 
         [HttpGet("{organizationId}")]
@@ -31,7 +33,7 @@ namespace DP_BE_LicensePortal.Controllers
         [HttpGet("{organizationId}/licenses")]
         public async Task<ActionResult<LicenseTableDTO>> GetOrganizationLicenses(int organizationId)
         {
-            var licenses = await _organizationService.GetLicensesByOrganizationIdAsync(organizationId);
+            var licenses = await _serialNumberDetailService.GetOrganizationsLicenses(organizationId);
             return Ok(licenses);
         }
 

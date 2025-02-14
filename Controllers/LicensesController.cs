@@ -5,6 +5,7 @@ using DP_BE_LicensePortal.Model.dto;
 using DP_BE_LicensePortal.Services.Interfaces;
 using DP_BE_LicensePortal.Model.dto.input;
 using DP_BE_LicensePortal.Model.dto.output;
+using ServiceReference1;
 
 namespace DP_BE_LicensePortal.Controllers
 {
@@ -19,6 +20,22 @@ namespace DP_BE_LicensePortal.Controllers
             _serialNumberDetailService = serialNumberDetailService;
         }
 
+        [HttpGet("test")]
+        public async Task<ActionResult<bool>> test()
+        {
+            ServiceReference1.ResellerServiceClient client = new ServiceReference1
+                .ResellerServiceClient(
+                    ResellerServiceClient.EndpointConfiguration.WsHttpBindingSecurityTransport_IResellerService
+                    );
+            var a = await client.GetSerialNumbersAsync("test account id", "test product number", 2);
+            var b = await client.IsValidSerialNumberAsync("bla");
+            Console.WriteLine(b);
+            for (int i = 0; i < a.Length; i++)
+            {
+                Console.WriteLine(a[i]);
+            }
+            return Ok();
+        }
         [HttpGet("organizations/{organizationId}")]
         public async Task<ActionResult<IEnumerable<LicenseTableDTO>>> GetLicensesByOrganization(int organizationId)
         {

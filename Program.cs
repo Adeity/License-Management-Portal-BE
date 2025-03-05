@@ -31,6 +31,8 @@ builder.Services.AddScoped<IOrganizationAccountService, OrganizationAccountServi
 builder.Services.AddScoped<IPackageDetailService, PackageDetailService>();
 builder.Services.AddScoped<ISerialNumberDetailService, SerialNumberDetailService>();
 builder.Services.AddScoped<IResellerService, ResellerService>();
+builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
+builder.Services.AddScoped<ISubscriptionItemRepository, SubscriptionItemRepository>();
 builder.Services.AddScoped<SerialNumberRequestLogService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

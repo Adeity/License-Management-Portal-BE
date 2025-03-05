@@ -19,12 +19,14 @@ namespace DP_BE_LicensePortal.Services
         private readonly IOrganizationAccountRepository _organizationAccountRepository;
         private readonly IPackageDetailRepository _packageDetailRepository;
         private readonly IInvoiceService _invoiceService;
+        private readonly ISubscriptionItemService _subscriptionItemService;
         private readonly SerialNumberRequestLogService _serialNumberRequestLogService;
 
         public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository,
             IOrganizationAccountRepository organizationAccountRepository,
             IPackageDetailRepository packageDetailRepository,
             IInvoiceService invoiceService,
+            ISubscriptionItemService subscriptionItemService,
             SerialNumberRequestLogService serialNumberRequestLogService
             )
         {
@@ -32,6 +34,7 @@ namespace DP_BE_LicensePortal.Services
             _organizationAccountRepository = organizationAccountRepository;
             _packageDetailRepository = packageDetailRepository;
             _invoiceService = invoiceService;
+            _subscriptionItemService = subscriptionItemService;
             _serialNumberRequestLogService = serialNumberRequestLogService;
         }
 
@@ -115,6 +118,17 @@ namespace DP_BE_LicensePortal.Services
 
             Console.WriteLine("created the dto:" + serialNumberDetailInputDto.ToString());
             var createdLicense = await this.AddAsync(serialNumberDetailInputDto);
+            
+            
+            // create the subscription item
+            var subscriptionItemInputDto = new SubscriptionItemInputDto()
+            {
+                InvoiceId = createdInvoice.Id,
+                SerialNumberDetailsId = createdLicense.Id,
+                EMailSentCount = 0,
+            };
+            var createdSubscriptionItem = await _subscriptionItemService.AddAsync(subscriptionItemInputDto);
+            
             return createdLicense;
         }
 

@@ -7,7 +7,9 @@ using DP_BE_LicensePortal.Utilities;
 using System.Threading.Tasks;
 using System.Linq;
 using DP_BE_LicensePortal.Model.dto;
+using DP_BE_LicensePortal.Model.Enums;
 using DP_BE_LicensePortal.Model.Mappers;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DP_BE_LicensePortal.Services
 {
@@ -16,12 +18,21 @@ namespace DP_BE_LicensePortal.Services
         private readonly ISerialNumberDetailRepository _serialNumberDetailRepository;
         private readonly IOrganizationAccountRepository _organizationAccountRepository;
         private readonly IPackageDetailRepository _packageDetailRepository;
+        private readonly IInvoiceService _invoiceService;
+        private readonly SerialNumberRequestLogService _serialNumberRequestLogService;
 
-        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository, IOrganizationAccountRepository organizationAccountRepository, IPackageDetailRepository packageDetailRepository)
+        public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository,
+            IOrganizationAccountRepository organizationAccountRepository,
+            IPackageDetailRepository packageDetailRepository,
+            IInvoiceService invoiceService,
+            SerialNumberRequestLogService serialNumberRequestLogService
+            )
         {
             _serialNumberDetailRepository = serialNumberDetailRepository;
             _organizationAccountRepository = organizationAccountRepository;
             _packageDetailRepository = packageDetailRepository;
+            _invoiceService = invoiceService;
+            _serialNumberRequestLogService = serialNumberRequestLogService;
         }
 
         public async Task<SerialNumberDetailOutputDto> GetByIdAsync(int id)
@@ -60,13 +71,51 @@ namespace DP_BE_LicensePortal.Services
             return licensesEntities.Select(licenseEntity => licenseEntity.ToLicenseTableDto(organizationName)).ToList();
         }
 
-        public async Task GenerateLicense(GenerateLicenseInputDto dto)
+        public async Task<SerialNumberDetailOutputDto> GenerateLicense(GenerateLicenseInputDto dto)
         {
-            var packageDetail = await _packageDetailRepository.GetByIdAsync(dto.PackageDetailsId);
+            PackageDetail packageDetail = await _packageDetailRepository.GetByIdAsync(dto.PackageDetailsId);
             var organizationAccount = await _organizationAccountRepository.GetByIdAsync(dto.OrganizationAccountId);
             var quantityOfLicensesToGenerate = dto.QuantityOfLicenses;
             
-            
+            if (organizationAccount == null) return null;
+
+            // Create the invoice
+            Console.WriteLine("about to create invoice dto");
+            var invoiceInputDto = new InvoiceInputDto()
+            {
+                InvoiceTypeId = InvoiceTypeEnum.Create_New_Licenses,
+                OrganizationAccountId = organizationAccount.Id
+            };
+            Console.WriteLine("craeted inptu dto" + invoiceInputDto);
+            var createdInvoice = await _invoiceService.AddAsync(invoiceInputDto);
+            Console.WriteLine("created entity");
+
+            // Create the serial number request log
+            var serialNumberRequestLogInputDto = new SerialNumberRequestLogInputDto()
+            {
+                RequestedSn = 1,
+                OrderdDate = DateTime.Now,
+            };
+            var serialNumberRequestLog = await _serialNumberRequestLogService.AddAsync(serialNumberRequestLogInputDto);
+
+            // Create the serial number
+            var randomSerialNumber = SerialNumberGenerator.GenerateSerialNumber(packageDetail.Prefix);
+            Console.WriteLine("Random Serial Number: " + randomSerialNumber);;
+            var serialNumberDetailInputDto = new SerialNumberDetailInputDto
+            {
+                AccountId = "Eaton",
+                SerialNumberRequestLogId = serialNumberRequestLog.Id,
+                IsValid = true,
+                Prefix = packageDetail.Prefix,
+                ExpirationDate = DateTime.Now.AddYears(1),
+                IsTemp = false,
+                ProductNumber = packageDetail.ProductNumber,
+                SerialNumber = randomSerialNumber,
+            };
+
+            Console.WriteLine("created the dto:" + serialNumberDetailInputDto.ToString());
+            var createdLicense = await this.AddAsync(serialNumberDetailInputDto);
+            return createdLicense;
         }
 
         public async Task<SerialNumberDetailOutputDto> UpdateAsync(int id, SerialNumberDetailInputDto dto)
@@ -76,7 +125,7 @@ namespace DP_BE_LicensePortal.Services
 
             // Update entity properties from DTO
             existingEntity.AccountID = dto.AccountId;
-            existingEntity.SerialNumberRequestLogId = dto.SerialNumberRequestLogId;
+            existingEntity.SerialNumberRequestLogID = dto.SerialNumberRequestLogId;
             existingEntity.IsValid = dto.IsValid;
             existingEntity.Prefix = dto.Prefix;
             existingEntity.ExpirationDate = dto.ExpirationDate;

@@ -61,7 +61,7 @@ public static class SerialNumberDetailMapper
         return new SerialNumberDetailOutputDto
         {
             AccountId = entity.AccountID,
-            SerialNumberRequestLogId = entity.SerialNumberRequestLogId,
+            SerialNumberRequestLogId = entity.SerialNumberRequestLogID,
             IsValid = entity.IsValid,
             Id = entity.ID,
             Prefix = entity.Prefix,
@@ -84,7 +84,7 @@ public static class SerialNumberDetailMapper
         return new SerialNumberDetail
         {
             AccountID = dto.AccountId,
-            SerialNumberRequestLogId = dto.SerialNumberRequestLogId,
+            SerialNumberRequestLogID = dto.SerialNumberRequestLogId,
             IsValid = dto.IsValid,
             Prefix = dto.Prefix,
             ExpirationDate = dto.ExpirationDate,

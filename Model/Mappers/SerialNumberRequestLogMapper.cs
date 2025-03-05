@@ -13,7 +13,7 @@ public static class SerialNumberRequestLogMapper
             OrderdDate = entity.OrderdDate,
             RequestedSn = entity.RequestedSN,
             Id = entity.ID,
-            SerialNumberDetails = entity.SerialNumberDetails.Select(snd => snd.ToOutputDto()).ToList()
+            // SerialNumberDetails = entity.SerialNumberDetails.Select(snd => snd.ToOutputDto()).ToList()
         };
     }
 

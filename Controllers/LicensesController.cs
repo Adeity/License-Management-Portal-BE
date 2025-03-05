@@ -46,7 +46,7 @@ namespace DP_BE_LicensePortal.Controllers
         [HttpPost]
         public async Task<IActionResult> GenerateLicense([FromBody] GenerateLicenseInputDto dto)
         {
-            await _serialNumberDetailService.GenerateLicense(dto);
+            var result = await _serialNumberDetailService.GenerateLicense(dto);
             return Created();
             // return CreatedAtAction(nameof(GetLicensesByOrganization), createdLicense);
         }

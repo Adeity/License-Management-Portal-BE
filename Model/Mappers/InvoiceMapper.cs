@@ -13,8 +13,8 @@ public static class InvoiceMapper
             Id = entity.Id,
             OrganizationAccountId = entity.OrganizationAccountId,
             UpdateDate = entity.UpdateDate,
-            InvoiceType = entity.InvoiceType.ToOutputDto(),
-            OrganizationAccount = entity.OrganizationAccount.ToOutputDto()
+            InvoiceType = entity.InvoiceType?.ToOutputDto(),
+            // OrganizationAccount = entity.OrganizationAccount.ToOutputDto()
         };
     }
 
@@ -22,7 +22,7 @@ public static class InvoiceMapper
     {
         return new Invoice
         {
-            InvoiceTypeId = dto.InvoiceTypeId,
+            InvoiceTypeId = (int) dto.InvoiceTypeId,
             OrganizationAccountId = dto.OrganizationAccountId,
             UpdateDate = dto.UpdateDate
         };

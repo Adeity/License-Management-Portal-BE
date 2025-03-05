@@ -12,7 +12,7 @@ public partial class SerialNumberDetail
     [Key]
     public int ID { get; set; }
 
-    public int SerialNumberRequestLogId { get; set; }
+    public int SerialNumberRequestLogID { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]

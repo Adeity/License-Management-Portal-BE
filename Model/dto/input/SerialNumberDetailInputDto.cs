@@ -16,4 +16,9 @@ public class SerialNumberDetailInputDto
     public DateTime UpdateDate { get; set; }
     public DateTime? LatestModificationDate { get; set; }
     public string ResellerCode { get; set; } = null!;
+
+    public override string ToString()
+    {
+        return $"AccountId: {AccountId}, SerialNumberRequestLogId: {SerialNumberRequestLogId}, IsValid: {IsValid}, Prefix: {Prefix}, ExpirationDate: {ExpirationDate}, ResellerInvoiceLastRenew: {ResellerInvoiceLastRenew}, IsTemp: {IsTemp}, ResellerInvoice: {ResellerInvoice}, ResellerAccount: {ResellerAccount}, ProductNumber: {ProductNumber}, SerialNumber: {SerialNumber}, UpdateDate: {UpdateDate}, LatestModificationDate: {LatestModificationDate}, ResellerCode: {ResellerCode}";
+    }
 }

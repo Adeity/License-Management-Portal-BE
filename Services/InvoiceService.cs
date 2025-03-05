@@ -35,7 +35,9 @@ namespace DP_BE_LicensePortal.Services
 
         public async Task<InvoiceOutputDto> AddAsync(InvoiceInputDto dto)
         {
+            Console.WriteLine("about to create netity from dto");
             var entity = dto.ToEntity();
+            Console.WriteLine("created entity from dto");
             var savedEntity = await _invoiceRepository.AddAsync(entity);
             return savedEntity.ToOutputDto();
         }
@@ -47,7 +49,7 @@ namespace DP_BE_LicensePortal.Services
 
             // Update entity properties from DTO
             existingEntity.OrganizationAccountId = dto.OrganizationAccountId;
-            existingEntity.InvoiceTypeId = dto.InvoiceTypeId;
+            existingEntity.InvoiceTypeId = (int) dto.InvoiceTypeId;
             existingEntity.UpdateDate = dto.UpdateDate;
 
             var updatedEntity = await _invoiceRepository.UpdateAsync(id, existingEntity);

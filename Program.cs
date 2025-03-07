@@ -31,6 +31,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.AddIdentityCore<User>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<MyDbContext>()
     .AddApiEndpoints();
 
@@ -70,6 +71,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.ApplyMigrations();
+    app.ApplySeeds();
 }
 
 app.MapIdentityApi<User>();

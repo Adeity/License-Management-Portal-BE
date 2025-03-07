@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using DP_BE_LicensePortal.Model.database;
 using DP_BE_LicensePortal.Model.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace DP_BE_LicensePortal.Context;
 
-public partial class MyDbContext : DbContext
+public partial class MyDbContext : IdentityDbContext<User>
 {
     private readonly IConfiguration _configuration;
     
@@ -56,6 +60,7 @@ public partial class MyDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<AddressType>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
@@ -253,9 +258,7 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ActivationStatusLogs_SerialNumberDetails");
         });
-            
-
-        OnModelCreatingPartial(modelBuilder);
+        modelBuilder.HasDefaultSchema("identity");
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

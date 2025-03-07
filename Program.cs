@@ -1,23 +1,38 @@
 
+using System.Text;
+using DP_BE_LicensePortal;
 using DP_BE_LicensePortal.Context;
+using DP_BE_LicensePortal.Extensions;
+using DP_BE_LicensePortal.Model.database;
 using DP_BE_LicensePortal.Model.Entities;
 using DP_BE_LicensePortal.Repositories;
 using DP_BE_LicensePortal.Repositories.Interfaces;
 using DP_BE_LicensePortal.Services;
 using DP_BE_LicensePortal.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // Register the DbContext
 builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
+builder.Services.AddIdentityCore<User>()
+    .AddEntityFrameworkStores<MyDbContext>()
+    .AddApiEndpoints();
 
 // Register repositories
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
@@ -49,16 +64,31 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
-// app.UseHttpsRedirection();
+app.MapIdentityApi<User>();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.MapGet("/weatherforecast", (HttpContext httpContext) =>
+    {
+        var forecast = Enumerable.Range(1, 5).Select(index =>
+                new WeatherForecast
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = "asewsoem"
+                })
+            .ToArray();
+        return forecast;
+    })
+    .WithName("GetWeatherForecast")
+    .WithOpenApi()
+    .RequireAuthorization();
 
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigin");

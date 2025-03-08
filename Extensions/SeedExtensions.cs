@@ -1,6 +1,7 @@
 ﻿using DP_BE_LicensePortal.Context;
 using DP_BE_LicensePortal.Model.database;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DP_BE_LicensePortal.Extensions;
 
@@ -10,26 +11,82 @@ public static class SeedExtensions
     {
         using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
         using MyDbContext context = serviceScope.ServiceProvider.GetService<MyDbContext>();
-        
-        await SeedRoles(serviceScope);
-        await SeedInitialUser(serviceScope);
+
+        await SeedFromRawSql(context);
+
+        // await SeedRoles(serviceScope);
+        // await SeedInitialUser(serviceScope);
+    }
+
+    private static async Task SeedFromRawSql(MyDbContext context)
+    {
+        context.Database.EnsureCreated();
+
+        try
+        {
+            string sql = await File.ReadAllTextAsync("./Extensions/seeds.sql");
+            await context.Database.ExecuteSqlRawAsync(sql);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     private static async Task SeedInitialUser(IServiceScope serviceScope)
     {
         var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
 
-        string email = "p@p.com";
         string password = "Admin123!";
-        if (await userManager.FindByEmailAsync("admin") == null)
+        if (await userManager.FindByEmailAsync("admin@p.com") == null)
         {
-            var user = new User();
-            user.UserName = email;
-            user.Email = email;
+            var adminUser = new User
+            {
+                UserName = "admin@p.com",
+                Email = "admin@p.com"
+            };
+            await userManager.CreateAsync(adminUser, password);
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+
+            var resellerUserOne = new User
+            {
+                UserName = "reseller1@p.com",
+                Email = "reseller1@p.com"
+            };
+            await userManager.CreateAsync(resellerUserOne, password);
+            await userManager.AddToRoleAsync(resellerUserOne, "Reseller");
+
+            var resellerUserTwo = new User
+            {
+                UserName = "reseller2@p.com",
+                Email = "reseller2@p.com"
+            };
+            await userManager.CreateAsync(resellerUserTwo, password);
+            await userManager.AddToRoleAsync(resellerUserTwo, "Reseller");
             
-            await userManager.CreateAsync(user, password);
-            
-            await userManager.AddToRoleAsync(user, "Admin");
+            var resellerUserThree = new User
+            {
+                UserName = "reseller3@p.com",
+                Email = "reseller3@p.com"
+            };
+            await userManager.CreateAsync(resellerUserThree, password);
+            await userManager.AddToRoleAsync(resellerUserThree, "Reseller");
+
+            var customerUserOne = new User
+            {
+                UserName = "customer1@p.com",
+                Email = "customer1@p.com"
+            };
+            await userManager.CreateAsync(customerUserOne, password);
+            await userManager.AddToRoleAsync(customerUserOne, "Customer");
+
+            var customerUserTwo = new User
+            {
+                UserName = "customer2@p.com",
+                Email = "customer2@p.com"
+            };
+            await userManager.CreateAsync(customerUserTwo, password);
+            await userManager.AddToRoleAsync(customerUserTwo, "Customer");
         }
     }
 

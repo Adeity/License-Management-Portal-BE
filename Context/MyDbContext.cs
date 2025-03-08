@@ -157,6 +157,9 @@ public partial class MyDbContext : IdentityDbContext<User>
             entity.HasOne(d => d.OrganizationRole).WithMany(p => p.OrganizationContacts)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrganizationContact_OrganizationRole");
+            
+            entity.HasOne(d => d.LoginUser).WithOne(u => u.OrganizationContact)
+                .HasConstraintName("FK_OrganizationContact_LoginUser");
         });
 
         modelBuilder.Entity<OrganizationPackageDetail>(entity =>

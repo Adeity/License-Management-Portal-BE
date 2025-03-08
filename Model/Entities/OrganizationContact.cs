@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DP_BE_LicensePortal.Model.database;
 using Microsoft.EntityFrameworkCore;
 
 namespace DP_BE_LicensePortal.Model.Entities;
@@ -53,4 +54,7 @@ public partial class OrganizationContact
     [ForeignKey("OrganizationRoleId")]
     [InverseProperty("OrganizationContacts")]
     public virtual OrganizationRole OrganizationRole { get; set; } = null!;
+    
+    [ForeignKey("LoginUserId")]
+    public virtual User LoginUser { get; set; } = null!;
 }

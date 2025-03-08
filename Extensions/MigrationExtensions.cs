@@ -12,4 +12,11 @@ public static class MigrationExtensions
         context.Database.Migrate();
     }
     
+    public static void DeleteDatabase(this IApplicationBuilder app)
+    {
+        using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+        using MyDbContext context = serviceScope.ServiceProvider.GetService<MyDbContext>();
+        context.Database.EnsureDeleted();
+    }
+    
 }

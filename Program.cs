@@ -70,11 +70,20 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigrations();
-    app.ApplySeeds();
+    // app.DeleteDatabase();
+    // app.ApplyMigrations();
+    // app.ApplySeeds();
 }
 
-app.MapIdentityApi<User>();
+var identityApis = app.MapIdentityApi<User>();
+identityApis.AddEndpointFilter(async (context, next) =>
+{
+    if (context.HttpContext.Request.Path == "/register")
+        return Results.Forbid();
+    
+    return await next(context);
+});
+
 
 app.MapGet("/weatherforecast", (HttpContext httpContext) =>
     {

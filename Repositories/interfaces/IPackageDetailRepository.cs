@@ -6,7 +6,7 @@ namespace DP_BE_LicensePortal.Repositories.Interfaces
 {
     public interface IPackageDetailRepository
     {
-        Task<PackageDetail> GetByIdAsync(int id);
+        Task<PackageDetail?> GetByIdAsync(int id);
         Task<Pagination<PackageDetail>> GetAllAsync(int pageIndex, int pageSize);
         Task<PackageDetail> AddAsync(PackageDetail entity);
         Task<PackageDetail> UpdateAsync(int id, PackageDetail entity);

@@ -77,10 +77,15 @@ namespace DP_BE_LicensePortal.Services
         public async Task<SerialNumberDetailOutputDto> GenerateLicense(GenerateLicenseInputDto dto)
         {
             PackageDetail packageDetail = await _packageDetailRepository.GetByIdAsync(dto.PackageDetailsId);
+            if (packageDetail == null)
+            {
+                throw new KeyNotFoundException($"Package Detail with ID: {dto.PackageDetailsId} not found.");
+            }
             var organizationAccount = await _organizationAccountRepository.GetByIdAsync(dto.OrganizationAccountId);
-            var quantityOfLicensesToGenerate = dto.QuantityOfLicenses;
-            
-            if (organizationAccount == null) return null;
+            if (organizationAccount == null)
+            {
+                throw new KeyNotFoundException($"Organization Account with ID: {dto.PackageDetailsId} not found.");
+            }
 
             // Create the invoice
             Console.WriteLine("about to create invoice dto");
@@ -89,14 +94,12 @@ namespace DP_BE_LicensePortal.Services
                 InvoiceTypeId = InvoiceTypeEnum.Create_New_Licenses,
                 OrganizationAccountId = organizationAccount.Id
             };
-            Console.WriteLine("craeted inptu dto" + invoiceInputDto);
             var createdInvoice = await _invoiceService.AddAsync(invoiceInputDto);
-            Console.WriteLine("created entity");
 
             // Create the serial number request log
             var serialNumberRequestLogInputDto = new SerialNumberRequestLogInputDto()
             {
-                RequestedSn = 1,
+                RequestedSn = dto.QuantityOfLicenses,
                 OrderdDate = DateTime.Now,
             };
             var serialNumberRequestLog = await _serialNumberRequestLogService.AddAsync(serialNumberRequestLogInputDto);
@@ -116,9 +119,7 @@ namespace DP_BE_LicensePortal.Services
                 SerialNumber = randomSerialNumber,
             };
 
-            Console.WriteLine("created the dto:" + serialNumberDetailInputDto.ToString());
             var createdLicense = await this.AddAsync(serialNumberDetailInputDto);
-            
             
             // create the subscription item
             var subscriptionItemInputDto = new SubscriptionItemInputDto()
@@ -127,7 +128,7 @@ namespace DP_BE_LicensePortal.Services
                 SerialNumberDetailsId = createdLicense.Id,
                 EMailSentCount = 0,
             };
-            var createdSubscriptionItem = await _subscriptionItemService.AddAsync(subscriptionItemInputDto);
+            await _subscriptionItemService.AddAsync(subscriptionItemInputDto);
             
             return createdLicense;
         }

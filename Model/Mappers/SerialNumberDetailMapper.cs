@@ -75,7 +75,7 @@ public static class SerialNumberDetailMapper
             UpdateDate = entity.UpdateDate,
             LatestModificationDate = entity.LatestModificationDate,
             ResellerCode = entity.ResellerCode,
-            SerialNumberRequestLog = entity.SerialNumberRequestLog.ToOutputDto()
+            SerialNumberRequestLog = entity.SerialNumberRequestLog?.ToOutputDto()
         };
     }
 

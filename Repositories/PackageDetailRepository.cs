@@ -18,7 +18,7 @@ namespace DP_BE_LicensePortal.Repositories
             _context = context;
         }
 
-        public async Task<PackageDetail> GetByIdAsync(int id)
+        public async Task<PackageDetail?> GetByIdAsync(int id)
         {
             return await _context.Set<PackageDetail>().FindAsync(id);
         }

@@ -20,14 +20,14 @@ namespace DP_BE_LicensePortal.Services
         private readonly IPackageDetailRepository _packageDetailRepository;
         private readonly IInvoiceService _invoiceService;
         private readonly ISubscriptionItemService _subscriptionItemService;
-        private readonly SerialNumberRequestLogService _serialNumberRequestLogService;
+        private readonly ISerialNumberRequestLogService _serialNumberRequestLogService;
 
         public SerialNumberDetailService(ISerialNumberDetailRepository serialNumberDetailRepository,
             IOrganizationAccountRepository organizationAccountRepository,
             IPackageDetailRepository packageDetailRepository,
             IInvoiceService invoiceService,
             ISubscriptionItemService subscriptionItemService,
-            SerialNumberRequestLogService serialNumberRequestLogService
+            ISerialNumberRequestLogService serialNumberRequestLogService
             )
         {
             _serialNumberDetailRepository = serialNumberDetailRepository;

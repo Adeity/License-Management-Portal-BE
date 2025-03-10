@@ -40,7 +40,7 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IOrganizationAccountRepository, OrganizationAccountRepository>();
 builder.Services.AddScoped<IPackageDetailRepository, PackageDetailRepository>();
 builder.Services.AddScoped<ISerialNumberDetailRepository, SerialNumberDetailRepository>();
-builder.Services.AddScoped<SerialNumberRequestLogRepository>();
+builder.Services.AddScoped<ISerialNumberRequestLogRepository, SerialNumberRequestLogRepository>();
 // // Register services
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IOrganizationAccountService, OrganizationAccountService>();
@@ -49,7 +49,7 @@ builder.Services.AddScoped<ISerialNumberDetailService, SerialNumberDetailService
 builder.Services.AddScoped<IResellerService, ResellerService>();
 builder.Services.AddScoped<ISubscriptionItemService, SubscriptionItemService>();
 builder.Services.AddScoped<ISubscriptionItemRepository, SubscriptionItemRepository>();
-builder.Services.AddScoped<SerialNumberRequestLogService>();
+builder.Services.AddScoped<ISerialNumberRequestLogService, SerialNumberRequestLogService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

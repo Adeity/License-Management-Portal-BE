@@ -1,9 +1,10 @@
 ﻿using DP_BE_LicensePortal.Context;
 using DP_BE_LicensePortal.Model.Entities;
+using DP_BE_LicensePortal.Repositories.Interfaces;
 
 namespace DP_BE_LicensePortal.Repositories;
 
-public class SerialNumberRequestLogRepository
+public class SerialNumberRequestLogRepository : ISerialNumberRequestLogRepository
 {
     private readonly MyDbContext _context;
     public SerialNumberRequestLogRepository(MyDbContext context)

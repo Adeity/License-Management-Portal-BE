@@ -1,7 +1,7 @@
 # License Management Portal
 
 A web application for managing software licenses, organizations, resellers, and related entities.
-The Frontend part can be found [here](https://github.com/Adeity/License-Management-Portal-FE) and the unit tests [here](https://github.com/Adeity/dp-be-unit-tests)
+The Frontend part can be found [here](https://github.com/Adeity/License-Management-Portal-FE) and the unit tests [here](https://github.com/Adeity/LMP-BE-UnitTests)
 ## Features
 
 - User authentication and role management (Admin, Reseller, etc.)
